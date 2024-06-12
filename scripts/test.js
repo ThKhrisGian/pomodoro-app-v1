@@ -1,7 +1,7 @@
 class PomodoroTimer {
   constructor() {
     this.state = "pomodoro";
-    this.pomodoroTime = 25;
+    this.pomodoroTime = 1;
     this.shortTime = 5;
     this.longTime = 15;
     this.timerTime = this.pomodoroTime;
@@ -11,7 +11,7 @@ class PomodoroTimer {
     this.autoStartBreak = true;
     this.autoStartPomodoro = false;
     this.currentPomodoro = 1;
-    this.speed = 1000;
+    this.speed = 250;
 
     this.pomodoroOption = document.querySelector("#pomodoro");
     this.shortOption = document.querySelector("#short");
