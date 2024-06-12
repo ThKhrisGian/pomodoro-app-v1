@@ -20,7 +20,7 @@ class PomodoroTimer {
     this.clock = document.querySelector("#clock");
     this.timerControl = document.querySelector("#timer-control");
 
-    this.sound = new Audio("./audios/bedside-clock-alarm-95792.mp3");
+    this.sound = new Audio("/audios/bedside-clock-alarm-95792.mp3");
 
     this.addEventListeners();
     this.updateTimerDisplay();
