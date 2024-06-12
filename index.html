@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <title>Vite App</title>
+  </head>
+  <body>
+    <header class="header">
+      <h1 class="header__title">Pomodoro</h1>
+    </header>
+
+    <main class="main">
+      <ul class="main__options">
+        <li class="main__option main__option--selected" id="pomodoro">
+          Pomo<span>doro</span>
+        </li>
+        <li class="main__option" id="short">Short <span>break</span></li>
+        <li class="main__option" id="long">Long <span>break</span></li>
+      </ul>
+
+      <div class="main__timer">
+        <div class="main__clock" id="clock">
+          <span class="main__time" id="timer">25:00</span>
+          <span class="main__control" id="timer-control">start</span>
+        </div>
+      </div>
+      <div class="main__setting">
+        <i class="fas fa-cog"></i>
+      </div>
+    </main>
+
+    <div class="menu">
+      
+    </div>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>

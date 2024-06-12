@@ -1,0 +1,51 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=Varela+Round&display=swap");
+
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800;900&display=swap");
+
+:root {
+  --primary-color: #ef4444;
+  --secundary-color: #f87171;
+  --third-color: #fafaf9;
+
+  --txt-base: 1rem;
+  --txt-lg: 1.125rem;
+  --txt-xl: 1.25rem;
+  --txt-2xl: 1.5rem;
+}
+
+/* sm */
+/* @media (min-width: 640px) { } */
+
+/* md */
+/* @media (min-width: 768px) { } */
+
+/* lg */
+/* @media (min-width: 1024px) { } */
+
+/* xl */
+/* @media (min-width: 1280px) { } */
+
+body {
+  background-color: var(--primary-color);
+  color: var(--third-color);
+  font-family: "Poppins", sans-serif;
+}
+
+h1 {
+  font-size: var(--txt-2xl);
+}
+
+h2 {
+  font-size: var(--txt-xl);
+}
+
+h3 {
+  font-size: var(--txt-lg);
+}
+
+span,
+p {
+  font-size: var(--txt-base);
+}
