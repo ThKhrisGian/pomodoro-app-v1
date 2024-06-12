@@ -15,7 +15,7 @@ class PomodoroTimer {
     this.autoStartBreak = false;
     this.autoStartPomodoro = false;
     this.currentPomodoro = 1;
-    this.speed = 175;
+    this.speed = 1000;
 
     this.initializeDOMElements();
     this.sound = new Audio(auido);
