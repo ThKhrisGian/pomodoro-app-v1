@@ -1,3 +1,5 @@
+import audio from '../audios/bedside-clock-alarm-95792.mp3';
+
 class PomodoroTimer {
   constructor() {
     this.state = "pomodoro";
@@ -20,7 +22,7 @@ class PomodoroTimer {
     this.clock = document.querySelector("#clock");
     this.timerControl = document.querySelector("#timer-control");
 
-    this.sound = new Audio("/audios/bedside-clock-alarm-95792.mp3");
+    this.sound = new Audio(audio);
 
     this.addEventListeners();
     this.updateTimerDisplay();
