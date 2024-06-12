@@ -1,31 +1,36 @@
-import audio from '../audios/bedside-clock-alarm-95792.mp3';
+import auido from "../audios/bedside-clock-alarm-95792.mp3";
 
 class PomodoroTimer {
   constructor() {
     this.state = "pomodoro";
-    this.pomodoroTime = 1;
-    this.shortTime = 5;
-    this.longTime = 15;
-    this.timerTime = this.pomodoroTime;
+    this.times = {
+      pomodoro: 1,
+      short: 2,
+      long: 3,
+    };
+    this.timerTime = this.times.pomodoro;
     this.secondsTimerTime = this.timerTime * 60;
     this.timerInterval = null;
     this.timerControlState = "play";
     this.autoStartBreak = true;
-    this.autoStartPomodoro = false;
+    this.autoStartPomodoro = true;
     this.currentPomodoro = 1;
-    this.speed = 250;
+    this.speed = 175;
 
+    this.initializeDOMElements();
+    this.sound = new Audio(auido);
+
+    this.addEventListeners();
+    this.updateTimerDisplay();
+  }
+
+  initializeDOMElements() {
     this.pomodoroOption = document.querySelector("#pomodoro");
     this.shortOption = document.querySelector("#short");
     this.longOption = document.querySelector("#long");
     this.timer = document.querySelector("#timer");
     this.clock = document.querySelector("#clock");
     this.timerControl = document.querySelector("#timer-control");
-
-    this.sound = new Audio(audio);
-
-    this.addEventListeners();
-    this.updateTimerDisplay();
   }
 
   setState(newState) {
@@ -37,21 +42,21 @@ class PomodoroTimer {
     this.secondsTimerTime = time * 60;
   }
 
-  setTimerControlState() {
+  toggleTimerControlState() {
     this.timerControlState =
       this.timerControlState === "play" ? "pause" : "play";
   }
 
-  timerConversor(time) {
+  formatTime(time) {
     return time < 10 ? `0${time}` : time;
   }
 
   updateTimerDisplay() {
-    const minuteTimer = Math.floor(this.secondsTimerTime / 60);
-    const secondsTimer = this.secondsTimerTime % 60;
-    this.timer.innerHTML = `${this.timerConversor(
-      minuteTimer
-    )}:${this.timerConversor(secondsTimer)}`;
+    const minutes = Math.floor(this.secondsTimerTime / 60);
+    const seconds = this.secondsTimerTime % 60;
+    this.timer.innerHTML = `${this.formatTime(minutes)}:${this.formatTime(
+      seconds
+    )}`;
   }
 
   changeBackground(seconds, variant) {
@@ -63,7 +68,7 @@ class PomodoroTimer {
     )`;
   }
 
-  actionTimer() {
+  startTimer() {
     const secondsBar = this.timerTime * 60;
 
     if (!this.timerInterval) {
@@ -72,131 +77,125 @@ class PomodoroTimer {
         this.updateTimerDisplay();
         this.changeBackground(secondsBar, this.secondsTimerTime);
         if (this.secondsTimerTime === 0) {
-          this.stopTimerInterval();
+          this.stopTimer();
           this.clock.style.background = `conic-gradient(var(--primary-color) 0deg, var(--third-color) 0deg)`;
-          this.playAudio();
+          this.sound.play();
+          this.sound.onended = () => {
+            this.sound.currentTime = 0;
+            if (!this.autoStartBreak) {
+              this.resetTimerControl();
+            } else {
+              this.changeState();
+            }
+          };
         }
       }, this.speed);
     }
   }
 
-  playAudio() {
-    this.sound.play();
-    this.sound.addEventListener("ended", () => {
-      this.sound.currentTime = 0;
-      if (this.autoStartBreak == false) {
-        this.timerControlState = "play";
-        this.timerControl.innerHTML = this.timerControlState;
-        this.setTimerTime(this.timerTime);
-        this.updateTimerDisplay();
-      } else {
-        this.changeState();
-      }
-    });
-  }
-
-  changeState() {
-    if (this.state == "pomodoro" && this.currentPomodoro === 7) {
-      this.setState("long");
-      this.setTimerTime(this.longTime);
-      document
-        .querySelector(".main__option--selected")
-        .classList.remove("main__option--selected");
-      this.longOption.classList.add("main__option--selected");
-      this.currentPomodoro++;
-      console.log(`Pomodoro actual: ${this.currentPomodoro}`);
-      console.log(`Estado actual: ${this.state}`);
-      this.updateTimerDisplay();
-      this.actionTimer();
-    } else if (this.state == "long" && this.currentPomodoro === 8) {
-      this.setState("pomodoro");
-      this.setTimerTime(this.pomodoroTime);
-      document
-        .querySelector(".main__option--selected")
-        .classList.remove("main__option--selected");
-      this.pomodoroOption.classList.add("main__option--selected");
-      this.currentPomodoro = 1;
-      console.log(`Pomodoro actual: ${this.currentPomodoro}`);
-      console.log(`Estado actual: ${this.state}`);
-      this.updateTimerDisplay();
-      if (this.autoStartPomodoro) {
-        this.actionTimer();
-      }
-    } else if (this.state == "pomodoro" && this.currentPomodoro % 2 !== 0) {
-      this.setState("short");
-      this.setTimerTime(this.shortTime);
-      document
-        .querySelector(".main__option--selected")
-        .classList.remove("main__option--selected");
-      this.shortOption.classList.add("main__option--selected");
-      this.currentPomodoro++;
-      console.log(`Pomodoro actual: ${this.currentPomodoro}`);
-      console.log(`Estado actual: ${this.state}`);
-      this.updateTimerDisplay();
-      this.actionTimer();
-    } else if (this.state == "short" && this.currentPomodoro % 2 === 0) {
-      this.setState("pomodoro");
-      this.setTimerTime(this.pomodoroTime);
-      document
-        .querySelector(".main__option--selected")
-        .classList.remove("main__option--selected");
-      this.pomodoroOption.classList.add("main__option--selected");
-      this.currentPomodoro++;
-      console.log(`Pomodoro actual: ${this.currentPomodoro}`);
-      console.log(`Estado actual: ${this.state}`);
-      this.updateTimerDisplay();
-      this.actionTimer();
-    } else {
-      this.timerControlState = "play";
-      this.timerControl.innerHTML = this.timerControlState;
-      this.setTimerTime(this.timerTime);
-      this.updateTimerDisplay();
-      console.log(`Pomodoro actual: ${this.currentPomodoro}`);
-      console.log(`Estado actual: ${this.state}`);
-    }
-  }
-
-  stopTimerInterval() {
+  stopTimer() {
     clearInterval(this.timerInterval);
     this.timerInterval = null;
   }
 
-  handleOptionClick(option, stateValue, time) {
-    this.stopTimerInterval();
+  resetTimerControl() {
     this.timerControlState = "play";
     this.timerControl.innerHTML = this.timerControlState;
-    this.setState(stateValue);
-    this.currentPomodoro = 1;
-    document
-      .querySelector(".main__option--selected")
-      .classList.remove("main__option--selected");
-    option.classList.add("main__option--selected");
-    this.setTimerTime(time);
+    this.setTimerTime(this.timerTime);
     this.updateTimerDisplay();
-    this.clock.style.background = `conic-gradient(var(--primary-color) 0deg, var(--third-color) 0deg)`;
+  }
+
+  changeState() {
+    if (this.state === "pomodoro" && this.currentPomodoro === 7) {
+      this.setBreakState("long", this.times.long, this.longOption);
+    } else if (this.state === "long" && this.currentPomodoro === 8) {
+      this.setPomodoroState(
+        this.times.pomodoro,
+        this.pomodoroOption,
+        !this.autoStartPomodoro
+      );
+    } else if (this.state === "pomodoro" && this.currentPomodoro % 2 !== 0) {
+      this.setBreakState("short", this.times.short, this.shortOption);
+    } else if (this.state === "short" && this.currentPomodoro % 2 === 0) {
+      this.setPomodoroState(this.times.pomodoro, this.pomodoroOption);
+    } else {
+      this.resetTimerControl();
+    }
+  }
+
+  setBreakState(state, time, option) {
+    this.setState(state);
+    this.setTimerTime(time);
+    this.switchSelectedOption(option);
+    this.currentPomodoro++;
+    this.updateTimerDisplay();
+    this.startTimer();
     console.log(`Pomodoro actual: ${this.currentPomodoro}`);
     console.log(`Estado actual: ${this.state}`);
   }
 
+  setPomodoroState(time, option, resetPomodoroCount = false) {
+    this.setState("pomodoro");
+    this.setTimerTime(time);
+    this.switchSelectedOption(option);
+    this.currentPomodoro =
+      resetPomodoroCount || this.currentPomodoro >= 8
+        ? 1
+        : this.currentPomodoro + 1;
+    this.updateTimerDisplay();
+    if (!resetPomodoroCount) {
+      this.startTimer();
+    }
+    console.log(`Pomodoro actual: ${this.currentPomodoro}`);
+    console.log(`Estado actual: ${this.state}`);
+  }
+
+  switchSelectedOption(option) {
+    document
+      .querySelector(".main__option--selected")
+      .classList.remove("main__option--selected");
+    option.classList.add("main__option--selected");
+  }
+
+  handleOptionClick(option, stateValue, time) {
+    this.stopTimer();
+    this.setState(stateValue);
+    this.currentPomodoro = 1;
+    this.switchSelectedOption(option);
+    this.setTimerTime(time);
+    this.updateTimerDisplay();
+    this.resetClockBackground();
+    console.log(`Pomodoro actual: ${this.currentPomodoro}`);
+    console.log(`Estado actual: ${this.state}`);
+  }
+
+  resetClockBackground() {
+    this.clock.style.background = `conic-gradient(var(--primary-color) 0deg, var(--third-color) 0deg)`;
+  }
+
   addEventListeners() {
     this.timerControl.addEventListener("click", () => {
-      this.setTimerControlState();
+      this.toggleTimerControlState();
       this.timerControl.innerHTML = this.timerControlState;
       if (this.timerControlState === "pause") {
-        this.actionTimer();
+        this.startTimer();
       } else {
-        this.stopTimerInterval();
+        this.stopTimer();
       }
     });
 
     this.pomodoroOption.addEventListener("click", () =>
-      this.handleOptionClick(this.pomodoroOption, "pomodoro", this.pomodoroTime)
+      this.handleOptionClick(
+        this.pomodoroOption,
+        "pomodoro",
+        this.times.pomodoro
+      )
     );
     this.shortOption.addEventListener("click", () =>
-      this.handleOptionClick(this.shortOption, "short", this.shortTime)
+      this.handleOptionClick(this.shortOption, "short", this.times.short)
     );
     this.longOption.addEventListener("click", () =>
-      this.handleOptionClick(this.longOption, "long", this.longTime)
+      this.handleOptionClick(this.longOption, "long", this.times.long)
     );
   }
 }
