@@ -4,16 +4,16 @@ class PomodoroTimer {
   constructor() {
     this.state = "pomodoro";
     this.times = {
-      pomodoro: 1,
-      short: 2,
-      long: 3,
+      pomodoro: 25,
+      short: 5,
+      long: 15,
     };
     this.timerTime = this.times.pomodoro;
     this.secondsTimerTime = this.timerTime * 60;
     this.timerInterval = null;
     this.timerControlState = "play";
-    this.autoStartBreak = true;
-    this.autoStartPomodoro = true;
+    this.autoStartBreak = false;
+    this.autoStartPomodoro = false;
     this.currentPomodoro = 1;
     this.speed = 175;
 
