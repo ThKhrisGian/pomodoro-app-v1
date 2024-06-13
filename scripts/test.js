@@ -155,6 +155,8 @@ class PomodoroTimer {
       .querySelector(".main__option--selected")
       .classList.remove("main__option--selected");
     option.classList.add("main__option--selected");
+    this.timerControlState = "play";
+    this.timerControl.innerHTML = "play";
   }
 
   handleOptionClick(option, stateValue, time) {
